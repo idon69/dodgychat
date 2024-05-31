@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #0d1117;
+            color: #fff;
+        }
+        header {
+            background-color: #0d1117;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid #4cb9ff;
+        }
+        h1 {
+            margin: 0;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+            position: relative;
+        }
+        .login-container, .chat-container {
+            display: none;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #161b22;
+            border: 2px solid #4cb9ff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+        .login-container.active, .chat-container.active {
+            display: block;
+        }
+        .login-container input, .chat-container input {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .login-container button, .chat-container button {
+            padding: 10px 20px;
+            background-color: #4cb9ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .login-container button:hover, .chat-container button:hover {
+            background-color: #1a8cff;
+        }
+        .chat-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .chat-container li {
+            margin: 10px 0;
+        }
+        .chat-container img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        footer {
+            background-color: #0d1117;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            border-top: 2px solid #4cb9ff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Chat App</h1>
+    </header>
+
+    <div class="container">
+        <div class="login-container active">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button id="loginButton">Login</button>
+            <p id="loginMessage"></p>
+        </div>
+        <div class="chat-container">
+            <h2>Chat Room</h2>
+            <div id="userList"></div>
+            <ul id="messages"></ul>
+            <input type="file" id="imageUpload">
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 ChatApp. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase and App Script -->
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-storage.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
