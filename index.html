@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
+    <title>DodgyChat</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -13,6 +13,12 @@
             box-sizing: border-box;
             background-color: #0d1117;
             color: #fff;
+        }
+        .login-container, .chat-container {
+            display: none;
+        }
+        .login-container.active, .chat-container.active {
+            display: block;
         }
         header {
             background-color: #0d1117;
@@ -33,47 +39,43 @@
             position: relative;
         }
         .login-container, .chat-container {
-            display: none;
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #161b22;
-            border: 2px solid #4cb9ff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-top: 50px;
+            position: relative;
         }
-        .login-container.active, .chat-container.active {
-            display: block;
+        .input-group {
+            margin-bottom: 20px;
         }
-        .login-container input, .chat-container input {
-            width: calc(100% - 24px);
+        .input-group input {
             padding: 10px;
-            margin-bottom: 10px;
-            border: none;
+            font-size: 18px;
+            border: 1px solid #4cb9ff;
             border-radius: 5px;
+            width: 80%;
         }
-        .login-container button, .chat-container button {
-            padding: 10px 20px;
+        .button {
+            padding: 15px 30px;
             background-color: #4cb9ff;
             color: #fff;
+            font-size: 24px;
+            text-decoration: none;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            font-family: 'Roboto Mono', monospace;
+            border: 2px solid #4cb9ff;
+            outline: none;
         }
-        .login-container button:hover, .chat-container button:hover {
+        .button:hover {
             background-color: #1a8cff;
         }
-        .chat-container ul {
-            list-style-type: none;
+        #messages {
+            list-style: none;
             padding: 0;
         }
-        .chat-container li {
-            margin: 10px 0;
-        }
-        .chat-container img {
-            max-width: 100%;
-            border-radius: 5px;
+        #messages li {
+            margin-bottom: 10px;
         }
         footer {
             background-color: #0d1117;
@@ -89,36 +91,33 @@
 </head>
 <body>
     <header>
-        <h1>Chat App</h1>
+        <h1>Firebase Chat</h1>
     </header>
-
-    <div class="container">
-        <div class="login-container active">
-            <h2>Login</h2>
-            <input type="text" id="username" placeholder="Username">
+    <div class="container login-container active">
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Email">
+        </div>
+        <div class="input-group">
             <input type="password" id="password" placeholder="Password">
-            <button id="loginButton">Login</button>
-            <p id="loginMessage"></p>
         </div>
-        <div class="chat-container">
-            <h2>Chat Room</h2>
-            <div id="userList"></div>
-            <ul id="messages"></ul>
-            <input type="file" id="imageUpload">
-            <input type="text" id="messageInput" placeholder="Type a message...">
-            <button id="sendButton">Send</button>
-        </div>
+        <button class="button" id="loginButton">Login</button>
+        <p id="loginMessage"></p>
     </div>
-
+    <div class="container chat-container">
+        <ul id="messages"></ul>
+        <div class="input-group">
+            <input type="text" id="messageInput" placeholder="Type a message">
+            <input type="file" id="imageUpload">
+        </div>
+        <button class="button" id="sendButton">Send</button>
+        <div id="userList"></div>
+    </div>
     <footer>
-        <p>&copy; 2024 ChatApp. All rights reserved.</p>
+        <p>&copy; 2024 DodgySoftware. All rights reserved.</p>
     </footer>
-
-    <!-- Firebase and App Script -->
     <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-storage.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="app.js"></script>
 </body>
