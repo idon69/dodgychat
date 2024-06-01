@@ -1,0 +1,122 @@
+body {
+    font-family: 'Roboto Mono', monospace;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #0d1117;
+    color: #fff;
+}
+
+header {
+    background-color: #0d1117;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #4cb9ff;
+}
+
+h1 {
+    margin: 0;
+    font-size: 3em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+    position: relative;
+}
+
+.login-container, .chat-container {
+    display: none;
+}
+
+.login-container.active, .chat-container.active {
+    display: block;
+}
+
+input[type="text"], input[type="password"], input[type="file"] {
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid #4cb9ff;
+    border-radius: 5px;
+    background-color: #161b22;
+    color: #fff;
+    font-family: 'Roboto Mono', monospace;
+}
+
+button {
+    padding: 15px 30px;
+    background-color: #4cb9ff;
+    color: #fff;
+    font-size: 24px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Roboto Mono', monospace;
+    border: 2px solid #4cb9ff;
+    outline: none;
+}
+
+button:hover {
+    background-color: #1a8cff;
+}
+
+footer {
+    background-color: #0d1117;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    border-top: 2px solid #4cb9ff;
+}
+
+footer p {
+    margin: 0;
+}
+
+#userList {
+    background-color: #161b22;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 20px auto;
+    border: 2px solid #4cb9ff;
+    color: #ccc;
+    overflow-y: auto;
+    max-height: 200px;
+}
+
+#messages {
+    background-color: #161b22;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 20px auto;
+    border: 2px solid #4cb9ff;
+    color: #ccc;
+    list-style-type: none;
+    padding-left: 0;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+#messages li {
+    margin-bottom: 10px;
+}
+
+#messageInput {
+    width: calc(100% - 40px);
+    margin-bottom: 10px;
+}
+
+#imageUpload {
+    margin-bottom: 10px;
+}
