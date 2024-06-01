@@ -8,9 +8,7 @@ const firebaseConfig = {
     appId: "1:273982037415:web:2ab1ffbd1c844b2dc06a82"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
 const auth = firebase.auth();
 const db = firebase.firestore();
 
@@ -18,27 +16,23 @@ const loginContainer = document.querySelector('.login-container');
 const chatContainer = document.querySelector('.chat-container');
 const loginButton = document.getElementById('loginButton');
 const sendButton = document.getElementById('sendButton');
+const usernameInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
 const messageInput = document.getElementById('messageInput');
-const imageUpload = document.getElementById('imageUpload');
 const messagesList = document.getElementById('messages');
 const userList = document.getElementById('userList');
+const imageUpload = document.getElementById('imageUpload');
 const loginMessage = document.getElementById('loginMessage');
 
-let currentUser;
+// Imgur API
+const IMGUR_CLIENT_ID = 'YOUR_IMGUR_CLIENT_ID';
 
-// Handle login
+// Sign in function
 loginButton.addEventListener('click', () => {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const username = usernameInput.value;
+    const password = passwordInput.value;
 
     auth.signInWithEmailAndPassword(username, password)
-        .then(userCredential => {
-            currentUser = userCredential.user;
-            return db.collection('users').doc(currentUser.uid).set({
-                username: username,
-                uid: currentUser.uid
-            }, { merge: true });
-        })
         .then(() => {
             loginContainer.classList.remove('active');
             chatContainer.classList.add('active');
@@ -46,41 +40,18 @@ loginButton.addEventListener('click', () => {
             loadUsers();
         })
         .catch(error => {
-            console.error(error);
-            loginMessage.textContent = "Login failed: " + error.message;
+            loginMessage.textContent = error.message;
         });
-});
-
-// Handle sending message
-sendButton.addEventListener('click', async () => {
-    const text = messageInput.value;
-    const file = imageUpload.files[0];
-
-    let imageUrl = "";
-    if (file) {
-        imageUrl = await uploadImage(file);
-    }
-
-    if (text || imageUrl) {
-        await db.collection('messages').add({
-            text: text,
-            imageUrl: imageUrl,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            uid: currentUser.uid
-        });
-        messageInput.value = '';
-        imageUpload.value = '';
-    }
 });
 
 // Load messages
 function loadMessages() {
-    db.collection('messages').orderBy('createdAt').onSnapshot(snapshot => {
+    db.collection('messages').orderBy('timestamp').onSnapshot(snapshot => {
         messagesList.innerHTML = '';
         snapshot.forEach(doc => {
             const message = doc.data();
             const li = document.createElement('li');
-            li.textContent = message.text;
+            li.textContent = `${message.username}: ${message.text}`;
             if (message.imageUrl) {
                 const img = document.createElement('img');
                 img.src = message.imageUrl;
@@ -93,36 +64,57 @@ function loadMessages() {
 
 // Load users
 function loadUsers() {
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            currentUser = user;
-            db.collection('users').onSnapshot(snapshot => {
-                userList.innerHTML = 'Online users:<br>';
-                snapshot.forEach(doc => {
-                    const user = doc.data();
-                    userList.innerHTML += user.username + '<br>';
-                });
-            });
-        } else {
-            console.log("No user is signed in.");
-        }
+    db.collection('users').onSnapshot(snapshot => {
+        userList.innerHTML = '';
+        snapshot.forEach(doc => {
+            const user = doc.data();
+            const div = document.createElement('div');
+            div.textContent = user.username;
+            userList.appendChild(div);
+        });
     });
 }
 
-// Upload image to Imgur
-async function uploadImage(file) {
-    const formData = new FormData();
-    formData.append('image', file);
+// Send message
+sendButton.addEventListener('click', async () => {
+    const text = messageInput.value;
+    const user = auth.currentUser;
+    let imageUrl = '';
 
-    try {
+    if (imageUpload.files.length > 0) {
+        const file = imageUpload.files[0];
+        const formData = new FormData();
+        formData.append('image', file);
+
         const response = await axios.post('https://api.imgur.com/3/image', formData, {
             headers: {
-                Authorization: '072582e92f000a9'
+                Authorization: `072582e92f000a9 ${IMGUR_CLIENT_ID}`
             }
         });
-        return response.data.data.link;
-    } catch (error) {
-        console.error("Image upload failed:", error);
-        return "";
+
+        imageUrl = response.data.data.link;
     }
-}
+
+    db.collection('messages').add({
+        text: text,
+        username: user.email,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        imageUrl: imageUrl
+    });
+
+    messageInput.value = '';
+    imageUpload.value = '';
+});
+
+// Authentication state observer
+auth.onAuthStateChanged(user => {
+    if (user) {
+        loginContainer.classList.remove('active');
+        chatContainer.classList.add('active');
+        loadMessages();
+        loadUsers();
+    } else {
+        loginContainer.classList.add('active');
+        chatContainer.classList.remove('active');
+    }
+});
